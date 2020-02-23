@@ -16,11 +16,13 @@ from scipy.optimize import curve_fit
 def func(x, a, b, c):
     return a * np.exp(b * x) + c
 
+def fsigmoid(x, a, b):
+    return 1.0 / (1.0 + np.exp(-a*(x-b)))
+
 if __name__ == '__main__':
     input_file = 'sk_positive_by_date.tsv'
-    df = pd.read_csv(input_file, sep='\t')
+    df = pd.read_csv(input_file, sep='\t', names = ['Date', 'Confirmed Cases'], skiprows=1)
     df['Date'] = pd.to_datetime(df['Date'])
-    df.columns = ['Date', 'Confirmed Cases']
 
     padding = datetime.timedelta(days=1)
     max_padding = datetime.timedelta(days=10)
@@ -30,8 +32,6 @@ if __name__ == '__main__':
     x = mdates.date2num(df['Date'].values) - 737443
     y = df['Confirmed Cases'].to_list()
 
-    # yn = y + 0.2 * np.random.normal(size=len(x))
-    # popt, pcov = curve_fit(func, x, yn)
     popt, pcov = curve_fit(func, x, y)
 
     fig.autofmt_xdate()

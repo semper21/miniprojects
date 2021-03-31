@@ -1,2 +1,1 @@
-# miniprojects
-Just random mini-projects for funsies 
+# Other side projects
